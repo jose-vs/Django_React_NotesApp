@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
 import ListItem from "../components/ListItem";
+import AddButton from "../components/AddButton";
 
 const NotesListPage = () => {
   const [notes, setNotes] = useState([]);
@@ -26,6 +26,7 @@ const NotesListPage = () => {
           return <ListItem key={index} note={note} />;
         })}
       </div>
+      <AddButton/>
     </div>
   );
 };

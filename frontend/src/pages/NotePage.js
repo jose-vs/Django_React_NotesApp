@@ -13,7 +13,7 @@ const NotePage = () => {
       const data = await response.json();
       setNote(data);
     };
-    getNote();
+    if (id !== "new") getNote();
   }, [id]);
 
   const deleteNote = async () => {
@@ -27,8 +27,26 @@ const NotePage = () => {
   };
 
   const updateNote = async () => {
-    await fetch(`/api/notes/${id}/update/`, {
-      method: "PUT",
+    if (id !== "new" && !note.body) {
+      deleteNote();
+    } else if (id !== "new") {
+      await fetch(`/api/notes/${id}/update/`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(note),
+      });
+    } else if (id === "new" && note !== null) {
+      createNote();
+    }
+
+    navigate("/", { replace: true });
+  };
+
+  const createNote = async () => {
+    await fetch(`/api/notes/create/`, {
+      method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
@@ -43,7 +61,11 @@ const NotePage = () => {
         <h3>
           <ArrowLeft onClick={updateNote} />
         </h3>
-        <button onClick={deleteNote}>Delete</button>
+        {id !== "new" ? (
+          <button onClick={deleteNote}>Delete</button>
+        ) : (
+          <button onClick={createNote}>Done</button>
+        )}
       </div>
       <textarea
         onChange={(e) => {

@@ -1,6 +1,8 @@
 from django.shortcuts import render
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
+
+import api
 from .models import Note
 from .serializers import NoteSerializer
 # Create your views here.
@@ -53,6 +55,15 @@ def getNotes(request):
 def getNote(request, pk): 
     notes = Note.objects.get(id=pk)
     serializer = NoteSerializer(notes, many=False)
+    return Response(serializer.data)
+
+@api_view(['POST'])
+def createNote(request):
+    data = request.data
+    note = Note.objects.create(
+        body=data['body']
+    ) 
+    serializer = NoteSerializer(note, many=False)
     return Response(serializer.data)
 
 @api_view(['PUT'])
